@@ -9,21 +9,21 @@ export const signup = async (req, res) => {
         console.log("req.body");
         console.log(req.body);
 
-        const { username, password } = req.body;
-        if (!username || !password) {
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(400).json({
-                message: !username && !password
+                message: !email && !password
                     ? "Please enter all fields"
-                    : !username
-                        ? "Please enter your username"
+                    : !email
+                        ? "Please enter your email"
                         : "Please enter your password",
             });
         }
 
-        const existingUser = await Users.findOne({ username });
+        const existingUser = await Users.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
-                message: "User with this username already exists"
+                message: "User with this email already exists"
             });
         }
 
@@ -31,7 +31,7 @@ export const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = new Users({
-            username,
+            email,
             password: hashedPassword
         });
 
@@ -47,20 +47,20 @@ export const signup = async (req, res) => {
 // Login controller
 export const login = async (req, res) => {
     try {
-        const { username, password } = req.body;
-        if (!username || !password) {
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(400).json({
-                message: !username && !password
+                message: !email && !password
                     ? "Please enter all fields"
-                    : !username
-                        ? "Please enter your username"
+                    : !email
+                        ? "Please enter your email"
                         : "Please enter your password",
             });
         }
 
-        const user = await Users.findOne({ username });
+        const user = await Users.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: `User not found with username: ${username}` });
+            return res.status(400).json({ message: `User not found with email: ${email}` });
         }
 
         const passwordIsMatched = await bcrypt.compare(password, user.password);
@@ -68,7 +68,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Incorrect password" });
         }
 
-        const accessToken = signAccessToken({ id: user._id, username: user.username });
+        const accessToken = signAccessToken({ id: user._id, email: user.email });
         const refreshToken = signRefreshToken({ id: user._id });
 
         res.cookie("refreshToken", refreshToken, {
@@ -81,7 +81,7 @@ export const login = async (req, res) => {
         res.status(200).json({
             message: "Login successful",
             accessToken,
-            user: { id: user._id, username: user.username },
+            user: { id: user._id, email: user.email },
         });
     } catch (error) {
         console.error(error.message);
