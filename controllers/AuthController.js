@@ -71,7 +71,7 @@ export const login = async (req, res) => {
         const accessToken = signAccessToken({ id: user._id, email: user.email });
         const refreshToken = signRefreshToken({ id: user._id });
 
-        res.cookie("refreshToken", refreshToken, {
+        res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
