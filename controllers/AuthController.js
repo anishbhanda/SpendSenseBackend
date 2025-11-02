@@ -2,13 +2,8 @@ import Users from "../models/Users.js";
 import bcrypt from "bcryptjs";
 import { signAccessToken, signRefreshToken } from "../utils/jwt.js";
 
-// Signup controller
 export const signup = async (req, res) => {
     try {
-
-        console.log("req.body");
-        console.log(req.body);
-
         const { email, password } = req.body;
         if (!email || !password) {
             return res.status(400).json({
@@ -44,7 +39,6 @@ export const signup = async (req, res) => {
     }
 };
 
-// Login controller
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
