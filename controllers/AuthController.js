@@ -82,3 +82,12 @@ export const login = async (req, res) => {
         res.status(500).json({ message: "Server error during login" });
     }
 };
+
+export const logout = async (req, res) => {
+    res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+    });
+    res.status(200).json({ message: "Logged out successfully" });
+}
