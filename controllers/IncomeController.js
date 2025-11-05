@@ -1,8 +1,9 @@
-import Income from "../models/Income";
+import Income from "../models/Income.js";
 
-export default createIncome = async (req, res) => {
+export const createIncome = async (req, res) => {
     try {
         const { source, amount, date } = req.body;
+        console.log(req.user.id);
 
         if (!source || !amount || !date) {
             const missingFields = [];
@@ -22,7 +23,7 @@ export default createIncome = async (req, res) => {
             return res.status(422).json({ message: "Amount must be a positive number" });
         }
         const newIncome = new Income({
-            source, amount, date
+            source, amount, date, user_id: req.user.id
 
         })
         await newIncome.save();

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const incomeSchema = new mongoose.Schema({
-    income_source: {
+    source: {
         type: String,
         required: [true, "Income source is required"],
         trim: true,
